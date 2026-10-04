@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <title>Carnet de dette</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button id="btn-back" class="icon-btn" aria-label="Retour" hidden>&#8592;</button>
+    <h1 id="title">Carnet de dette</h1>
+    <button id="btn-settings" class="icon-btn" aria-label="Réglages">&#9881;</button>
+  </header>
+
+  <main>
+    <!-- Accueil : liste des clients -->
+    <section id="view-home" class="view">
+      <div class="summary card">
+        <div class="summary-label">Total à recevoir</div>
+        <div id="total-due" class="summary-amount">0</div>
+        <div id="total-clients" class="summary-sub"></div>
+      </div>
+      <input id="search" type="search" placeholder="Rechercher un client…" autocomplete="off">
+      <ul id="client-list" class="list"></ul>
+      <p id="empty-home" class="empty" hidden>Aucun client pour l'instant.<br>Appuyez sur « + » pour en ajouter un.</p>
+      <button id="fab-add-client" class="fab" aria-label="Ajouter un client">+</button>
+    </section>
+
+    <!-- Fiche client -->
+    <section id="view-client" class="view" hidden>
+      <div class="card client-head">
+        <div class="client-name" id="c-name"></div>
+        <div class="client-phone" id="c-phone"></div>
+        <div class="summary-label">Solde dû</div>
+        <div class="summary-amount" id="c-balance"></div>
+        <div class="row">
+          <button id="btn-credit" class="btn btn-debt">+ Dette</button>
+          <button id="btn-payment" class="btn btn-pay">Paiement reçu</button>
+        </div>
+        <div class="row small">
+          <button id="btn-remind" class="btn btn-ghost">Relancer (WhatsApp)</button>
+          <button id="btn-sms" class="btn btn-ghost">SMS</button>
+          <button id="btn-edit-client" class="btn btn-ghost">Modifier</button>
+        </div>
+      </div>
+      <h2 class="section-title">Historique</h2>
+      <ul id="tx-list" class="list"></ul>
+      <p id="empty-tx" class="empty" hidden>Aucune opération.</p>
+    </section>
+
+    <!-- Réglages -->
+    <section id="view-settings" class="view" hidden>
+      <form id="settings-form" class="card form">
+        <label>Nom de la boutique
+          <input name="shopName" placeholder="Ex. Boutique Chez Alan">
+        </label>
+        <label>Devise
+          <input name="currency" placeholder="FCFA" required>
+        </label>
+        <button class="btn btn-pay" type="submit">Enregistrer</button>
+      </form>
+      <div class="card form">
+        <h2 class="section-title">Sauvegarde</h2>
+        <p class="hint">Les données sont stockées uniquement sur ce téléphone. Exportez régulièrement une sauvegarde.</p>
+        <button id="btn-export" class="btn btn-ghost">Exporter (fichier .json)</button>
+        <label class="btn btn-ghost file-btn">Importer une sauvegarde
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <!-- Formulaire client -->
+  <dialog id="dlg-client">
+    <form method="dialog" id="client-form" class="form">
+      <h2 id="client-form-title">Nouveau client</h2>
+      <label>Nom *
+        <input name="name" required autocomplete="off">
+      </label>
+      <label>Téléphone
+        <input name="phone" type="tel" inputmode="tel" placeholder="Ex. 22997000000">
+      </label>
+      <label>Note
+        <input name="note" autocomplete="off">
+      </label>
+      <div class="row">
+        <button type="button" class="btn btn-ghost" data-close>Annuler</button>
+        <button type="submit" class="btn btn-pay">Enregistrer</button>
+      </div>
+      <button type="button" id="btn-delete-client" class="btn btn-danger-link" hidden>Supprimer ce client</button>
+    </form>
+  </dialog>
+
+  <!-- Formulaire opération -->
+  <dialog id="dlg-tx">
+    <form method="dialog" id="tx-form" class="form">
+      <h2 id="tx-form-title"></h2>
+      <label>Montant *
+        <input name="amount" type="number" inputmode="numeric" min="1" step="1" required>
+      </label>
+      <label>Description
+        <input name="note" placeholder="Ex. 2 sacs de riz" autocomplete="off">
+      </label>
+      <label>Date
+        <input name="date" type="date" required>
+      </label>
+      <div class="row">
+        <button type="button" class="btn btn-ghost" data-close>Annuler</button>
+        <button type="submit" class="btn btn-pay">Enregistrer</button>
+      </div>
+      <button type="button" id="btn-delete-tx" class="btn btn-danger-link" hidden>Supprimer cette opération</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
